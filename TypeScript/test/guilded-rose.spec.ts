@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { Item, GildedRose } from '../app/gilded-rose';
 import {GeneralItem} from "../app/wrappers/GeneralItem";
 import {AgedBrie} from "../app/wrappers/AgedBrie";
+import {BackstagePass} from "../app/wrappers/BackstagePass";
 
 function holdItemForDays(wrapper: GeneralItem, days: number) {
     for (let i = 0; i < days; i++) {
@@ -45,6 +46,22 @@ describe('Gilded Rose', function () {
         expect(agedBrie.unwrap().quality).to.equal(50);
         holdItemForDays(agedBrie, 10);
         expect(agedBrie.unwrap().quality).to.equal(50);
+    });
+
+    it('should increase value for Backstage Pass with specific rate and reset to 0 when expired', function () {
+        const backstagePass = new BackstagePass(new Item("Backstage Bass", 15, 10));
+        holdItemForDays(backstagePass, 5);
+        expect(backstagePass.unwrap().quality).to.equal(15);
+        holdItemForDays(backstagePass, 1);
+        expect(backstagePass.unwrap().quality).to.equal(17);
+        holdItemForDays(backstagePass, 4);
+        expect(backstagePass.unwrap().quality).to.equal(25);
+        holdItemForDays(backstagePass, 1);
+        expect(backstagePass.unwrap().quality).to.equal(28);
+        holdItemForDays(backstagePass, 4);
+        expect(backstagePass.unwrap().quality).to.equal(40);
+        holdItemForDays(backstagePass, 1);
+        expect(backstagePass.unwrap().quality).to.equal(0);
     });
 
 });
