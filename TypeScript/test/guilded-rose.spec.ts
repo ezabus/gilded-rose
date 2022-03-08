@@ -4,6 +4,7 @@ import {GeneralItem} from "../app/wrappers/GeneralItem";
 import {AgedBrie} from "../app/wrappers/AgedBrie";
 import {BackstagePass} from "../app/wrappers/BackstagePass";
 import {Conjured} from "../app/wrappers/Conjured";
+import {Sulfuras} from "../app/wrappers/Sulfuras";
 
 function holdItemForDays(wrapper: GeneralItem, days: number) {
     for (let i = 0; i < days; i++) {
@@ -71,6 +72,12 @@ describe('Gilded Rose', function () {
         expect(conjured.unwrap().quality).to.equal(8);
         holdItemForDays(conjured, 2);
         expect(conjured.unwrap().quality).to.equal(0);
+    });
+
+    it('should not decrease value for sulfuras', function () {
+        const sulfarus = new Sulfuras(new Item("Sulfarus", 10, 10));
+        holdItemForDays(sulfarus, 20);
+        expect(sulfarus.unwrap().quality, ).to.equal(10);
     })
 
 });
