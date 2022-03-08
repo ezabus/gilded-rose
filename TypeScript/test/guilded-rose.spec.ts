@@ -3,6 +3,7 @@ import { Item, GildedRose } from '../app/gilded-rose';
 import {GeneralItem} from "../app/wrappers/GeneralItem";
 import {AgedBrie} from "../app/wrappers/AgedBrie";
 import {BackstagePass} from "../app/wrappers/BackstagePass";
+import {Conjured} from "../app/wrappers/Conjured";
 
 function holdItemForDays(wrapper: GeneralItem, days: number) {
     for (let i = 0; i < days; i++) {
@@ -63,5 +64,13 @@ describe('Gilded Rose', function () {
         holdItemForDays(backstagePass, 1);
         expect(backstagePass.unwrap().quality).to.equal(0);
     });
+
+    it('should decrease quality of conjured items twice as speed as usual', function () {
+        const conjured = new Conjured(new Item("Conjured", 4, 16));
+        holdItemForDays(conjured, 4);
+        expect(conjured.unwrap().quality).to.equal(8);
+        holdItemForDays(conjured, 2);
+        expect(conjured.unwrap().quality).to.equal(0);
+    })
 
 });
