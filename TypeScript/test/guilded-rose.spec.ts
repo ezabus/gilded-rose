@@ -12,13 +12,33 @@ function holdItemForDays(wrapper: GeneralItem, days: number) {
     }
 }
 
+function holdItemsForDays(glidedRose: GildedRose, days: number): Item[] {
+    let updatedItems: Item[] = [];
+    for (let i = 0; i < days; i++) {
+        updatedItems = glidedRose.updateQuality();
+    }
+    return updatedItems;
+}
+
 describe('Gilded Rose', function () {
 
-    // it('should foo', function() {
-    //     const gildedRose = new GildedRose([ new Item('foo', 0, 0) ]);
-    //     const items = gildedRose.updateQuality();
-    //     expect(items[0].name).to.equal('fixme');
-    // });
+    it('should properly update quality for list of items', function() {
+        const gildedRose = new GildedRose([
+            new Item('Aged Brie', 10, 10),
+            new Item('Backstage passes to a TAFKAL80ETC concert', 4, 10),
+            new Item('Sulfuras, Hand of Ragnaros', 12, 12),
+            new Item('Conjured', 13, 13),
+        ]);
+        const items = holdItemsForDays(gildedRose, 1);
+        const agedBrie = items[0];
+        const backstagePass = items[1];
+        const sulfurus = items[2];
+        const conjured = items[3];
+        expect(agedBrie.quality).to.equal(11);
+        expect(backstagePass.quality).to.equal(13);
+        expect(sulfurus.quality).to.equal(12);
+        expect(conjured.quality).to.equal(11);
+    });
 
     it('should decrease quality by 1, but not less than 0', function () {
         const testItem = new Item("TestItem", 20, 10);

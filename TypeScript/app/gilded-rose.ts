@@ -2,6 +2,7 @@ import {GeneralItem} from "./wrappers/GeneralItem";
 import {AgedBrie} from "./wrappers/AgedBrie";
 import {BackstagePass} from "./wrappers/BackstagePass";
 import {Sulfuras} from "./wrappers/Sulfuras";
+import {Conjured} from "./wrappers/Conjured";
 
 export class Item {
     name: string;
@@ -22,57 +23,13 @@ export class GildedRose {
         this.items = items;
     }
 
-    updateQuality() {
-        for (let i = 0; i < this.items.length; i++) {
-            if (this.items[i].name != 'Aged Brie' && this.items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-                if (this.items[i].quality > 0) {
-                    if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
-                        this.items[i].quality = this.items[i].quality - 1
-                    }
-                }
-            } else {
-                if (this.items[i].quality < 50) {
-                    this.items[i].quality = this.items[i].quality + 1
-                    if (this.items[i].name == 'Backstage passes to a TAFKAL80ETC concert') {
-                        if (this.items[i].sellIn < 11) {
-                            if (this.items[i].quality < 50) {
-                                this.items[i].quality = this.items[i].quality + 1
-                            }
-                        }
-                        if (this.items[i].sellIn < 6) {
-                            if (this.items[i].quality < 50) {
-                                this.items[i].quality = this.items[i].quality + 1
-                            }
-                        }
-                    }
-                }
-            }
-            if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
-                this.items[i].sellIn = this.items[i].sellIn - 1;
-            }
-            if (this.items[i].sellIn < 0) {
-                if (this.items[i].name != 'Aged Brie') {
-                    if (this.items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-                        if (this.items[i].quality > 0) {
-                            if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
-                                this.items[i].quality = this.items[i].quality - 1
-                            }
-                        }
-                    } else {
-                        this.items[i].quality = this.items[i].quality - this.items[i].quality
-                    }
-                } else {
-                    if (this.items[i].quality < 50) {
-                        this.items[i].quality = this.items[i].quality + 1
-                    }
-                }
-            }
-        }
-
-        return this.items;
+    updateQuality(): Array<Item> {
+        const wrappedItems = this.wrapItems(this.items);
+        wrappedItems.forEach(wrappedItem => wrappedItem.updateQuality());
+        return this.unwrapItems(wrappedItems);
     }
 
-    wrapItems(items: Item[]): GeneralItem[] {
+    protected wrapItems(items: Item[]): GeneralItem[] {
         return items.map(item => {
             if (item.name === 'Aged Brie') {
                 return new AgedBrie(item);
@@ -80,13 +37,15 @@ export class GildedRose {
                 return new BackstagePass(item);
             } else if (item.name === 'Sulfuras, Hand of Ragnaros') {
                 return new Sulfuras(item);
+            } else if (item.name === 'Conjured') {
+                return new Conjured(item);
             } else {
                 return new GeneralItem(item);
             }
         })
     }
 
-    unwrapItems(wrappedItems: GeneralItem[]): Item[] {
+    protected unwrapItems(wrappedItems: GeneralItem[]): Item[] {
         return wrappedItems.map(wrappedItem => wrappedItem.unwrap());
     }
 }
