@@ -7,7 +7,8 @@
     "precompile": "rimraf app/**/*.js test/**/*.js",
     "compile": "tsc",
     "pretest": "rimraf app/**/*.js test/**/*.js",
-    "test": "nyc mocha"
+    "test": "nyc mocha",
+    "run:all": "npm run precompile && npm run compile && npm run pretest && npm run test"
   },
   "author": "paucls",
   "homepage": "https://github.com/paucls/typescript-mocha-kata-seed",
@@ -41,4 +42,3 @@
     ]
   }
 }
-

@@ -1,3 +1,8 @@
+import {GeneralItem} from "./wrappers/GeneralItem";
+import {AgedBrie} from "./wrappers/AgedBrie";
+import {BackstagePass} from "./wrappers/BackstagePass";
+import {Sulfuras} from "./wrappers/Sulfuras";
+
 export class Item {
     name: string;
     sellIn: number;
@@ -65,5 +70,23 @@ export class GildedRose {
         }
 
         return this.items;
+    }
+
+    wrapItems(items: Item[]): GeneralItem[] {
+        return items.map(item => {
+            if (item.name === 'Aged Brie') {
+                return new AgedBrie(item);
+            } else if (item.name === 'Backstage passes to a TAFKAL80ETC concert') {
+                return new BackstagePass(item);
+            } else if (item.name === 'Sulfuras, Hand of Ragnaros') {
+                return new Sulfuras(item);
+            } else {
+                return new GeneralItem(item);
+            }
+        })
+    }
+
+    unwrapItems(wrappedItems: GeneralItem[]): Item[] {
+        return wrappedItems.map(wrappedItem => wrappedItem.unwrap());
     }
 }
