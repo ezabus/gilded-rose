@@ -8,14 +8,29 @@ export class GeneralItem {
     }
 
     public updateQuality() {
+        this.item.quality = this.calcNewQuality();
+        this.checkConstraints();
+        this.updateSellIn();
+    }
+
+    protected calcNewQuality(): number {
+        let qualityDegradeRate = 0;
         if (this.item.quality !== 0) {
-            let qualityDegradeRate = 1;
+            qualityDegradeRate = 1;
             if (this.item.sellIn === 0) {
                 qualityDegradeRate = 2;
             }
-            this.item.quality = this.item.quality - qualityDegradeRate;
         }
-        this.updateSellIn();
+        return this.item.quality - qualityDegradeRate;
+    }
+
+    protected checkConstraints() {
+        if (this.item.quality < 0) {
+            this.item.quality = 0;
+        }
+        if (this.item.quality > 50) {
+            this.item.quality = 50;
+        }
     }
 
     protected updateSellIn() {

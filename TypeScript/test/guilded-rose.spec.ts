@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { Item, GildedRose } from '../app/gilded-rose';
 import {GeneralItem} from "../app/wrappers/GeneralItem";
+import {AgedBrie} from "../app/wrappers/AgedBrie";
 
 function holdItemForDays(wrapper: GeneralItem, days: number) {
     for (let i = 0; i < days; i++) {
@@ -25,7 +26,7 @@ describe('Gilded Rose', function () {
         expect(wrapper.unwrap().quality).to.equal(0);
         holdItemForDays(wrapper, 1);
         expect(wrapper.unwrap().quality).to.equal(0);
-    })
+    });
 
     it('should decrease quality by 2 after expire', function () {
         const testItem = new Item("TestItem", 10, 20);
@@ -34,6 +35,16 @@ describe('Gilded Rose', function () {
         expect(wrapper.unwrap().quality).to.equal(10);
         holdItemForDays(wrapper, 1);
         expect(wrapper.unwrap().quality).to.equal(8);
-    })
+    });
+
+    it('should increase value for AgedBrie, but not over 50', function () {
+        const agedBrie = new AgedBrie(new Item("Aged Brie", 30, 30));
+        holdItemForDays(agedBrie, 10);
+        expect(agedBrie.unwrap().quality).to.equal(40);
+        holdItemForDays(agedBrie, 10);
+        expect(agedBrie.unwrap().quality).to.equal(50);
+        holdItemForDays(agedBrie, 10);
+        expect(agedBrie.unwrap().quality).to.equal(50);
+    });
 
 });
